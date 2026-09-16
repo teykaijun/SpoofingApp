@@ -87,6 +87,9 @@ A desktop app for picking locations on a big screen and pushing them to your pho
 - Microsoft Edge WebView2 Runtime (preinstalled on Windows 11)
 - The release zip is self-contained; .NET is only needed to build it yourself (SDK 10.0+)
 
+Windows blocks executables that came from the internet, so if `SpoofingApp.exe` does not
+start, right-click the downloaded zip → Properties → tick **Unblock** before extracting.
+
 ### Build and run
 
 ```bash
