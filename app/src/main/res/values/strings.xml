@@ -1,0 +1,97 @@
+<resources>
+    <string name="app_name">Location Spoofer</string>
+
+    <!-- Notification -->
+    <string name="notification_channel_name">Location spoofing</string>
+    <string name="notification_channel_description">Shown while a mock location is active</string>
+    <string name="notification_title_fixed">Spoofing location</string>
+    <string name="notification_title_route">Simulating route</string>
+    <string name="notification_text_route">%1$s of %2$s · %3$s</string>
+    <string name="notification_action_stop">Stop</string>
+
+    <!-- Setup -->
+    <string name="setup_title">Finish setup to spoof your location</string>
+    <string name="setup_permission">Allow location access. Android requires it for the spoofing service.</string>
+    <string name="setup_permission_button">Allow</string>
+    <string name="setup_dev_options">Turn on Developer options: Settings › About phone › tap Build number 7 times.</string>
+    <string name="setup_dev_options_button">About phone</string>
+    <string name="setup_mock_app">In Developer options, set “Select mock location app” to Location Spoofer.</string>
+    <string name="setup_mock_app_button">Developer options</string>
+    <string name="setup_permission_denied">Location permission was denied. Enable it in the app settings.</string>
+    <string name="setup_open_app_settings">App settings</string>
+
+    <!-- Search -->
+    <string name="search_hint">Search a place or enter lat, lng</string>
+    <string name="search_no_results">No places found</string>
+    <string name="search_unavailable">Place search is unavailable on this device. Enter coordinates instead.</string>
+    <string name="search_failed">Search failed. Check your connection and try again.</string>
+    <string name="cd_clear_search">Clear search</string>
+
+    <!-- Modes -->
+    <string name="mode_fixed">Fixed point</string>
+    <string name="mode_route">Route</string>
+
+    <!-- Fixed point panel -->
+    <string name="hint_tap_map_fixed">Tap the map to choose a location</string>
+    <string name="action_edit_coordinates">Coordinates</string>
+    <string name="action_save_favorite">Save</string>
+
+    <!-- Route panel -->
+    <string name="hint_tap_map_route">Tap the map to add waypoints</string>
+    <plurals name="route_summary">
+        <item quantity="one">%1$d waypoint · %2$s</item>
+        <item quantity="other">%1$d waypoints · %2$s</item>
+    </plurals>
+    <string name="action_undo_waypoint">Undo</string>
+    <string name="action_clear_route">Clear</string>
+    <string name="speed_label">Speed %1$s</string>
+    <string name="speed_walk">Walk</string>
+    <string name="speed_run">Run</string>
+    <string name="speed_bike">Bike</string>
+    <string name="speed_car">Car</string>
+    <string name="loop_route">Loop</string>
+    <string name="route_needs_two_points">Add at least two waypoints to simulate a route</string>
+
+    <!-- Primary actions and status -->
+    <string name="action_start">Start spoofing</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_apply">Apply changes</string>
+    <string name="status_fixed">Spoofing %1$s</string>
+    <string name="status_route">Route: %1$s of %2$s</string>
+    <string name="status_route_finished">Route finished. Holding the last position.</string>
+
+    <!-- Map controls -->
+    <string name="cd_my_location">Center on my location</string>
+    <string name="cd_center_target">Center on target</string>
+    <string name="cd_favorites">Favorites</string>
+    <string name="cd_settings">Settings</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_empty">No favorites yet. Pick a location and tap Save.</string>
+    <string name="cd_delete_favorite">Delete favorite</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_save_title">Save favorite</string>
+    <string name="dialog_save_name">Name</string>
+    <string name="dialog_coordinates_title">Coordinates</string>
+    <string name="label_coordinates">Latitude, longitude</string>
+    <string name="error_coordinates">Use decimal degrees, for example 48.85837, 2.29448</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Spoofing settings</string>
+    <string name="settings_accuracy">Reported accuracy: %1$d m</string>
+    <string name="settings_interval">Update interval: %1$s</string>
+    <string name="settings_fused">Mock Google Play services location</string>
+    <string name="settings_fused_summary">Most apps, including Google Maps, read location from Play services</string>
+
+    <!-- Errors -->
+    <string name="error_not_mock_app">Location Spoofer is not selected as the mock location app in Developer options.</string>
+    <string name="error_permission">Location permission is required to run the spoofing service.</string>
+    <string name="error_foreground_blocked">Android blocked the spoofing service from starting. Open the app and try again.</string>
+    <string name="error_generic">Spoofing stopped: %1$s</string>
+    <string name="error_location_unavailable">Your current location is not available yet</string>
+</resources>
