@@ -20,5 +20,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SpoofingMobileApp"
+rootProject.name = "SpoofingApp"
 include(":app")
