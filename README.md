@@ -84,3 +84,11 @@ gradlew.bat testDebugUnitTest
   network connection. Typing coordinates always works.
 - Map tiles come from OpenStreetMap. Please respect its
   [tile usage policy](https://operations.osmfoundation.org/policies/tiles/).
+
+## License
+
+[MIT](LICENSE) © kjkaijun
+
+Map data and tiles © OpenStreetMap contributors. This project also depends on
+osmdroid (Apache-2.0) and Google Play services Location, which carries Google's
+own terms.
