@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SpoofingApp.Desktop.Tests/SpoofingApp.Desktop.Tests.csproj" />
+  <Project Path="SpoofingApp.Desktop/SpoofingApp.Desktop.csproj" />
+</Solution>

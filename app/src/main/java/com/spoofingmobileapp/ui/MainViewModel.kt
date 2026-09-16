@@ -19,6 +19,7 @@ import com.spoofingmobileapp.geo.PlaceSearch
 import com.spoofingmobileapp.geo.Units
 import com.spoofingmobileapp.spoof.MockLocationService
 import com.spoofingmobileapp.spoof.MockLocationSetup
+import com.spoofingmobileapp.spoof.RemoteCommand
 import com.spoofingmobileapp.spoof.SpoofConfig
 import com.spoofingmobileapp.spoof.SpoofError
 import com.spoofingmobileapp.spoof.SpoofSession
@@ -228,6 +229,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun stopSpoofing() = MockLocationService.stop(getApplication<Application>())
 
     fun clearError() = SpoofSession.clearError()
+
+    /** Applies a command sent from the desktop controller over adb. */
+    fun applyRemoteCommand(command: RemoteCommand) {
+        when (command) {
+            RemoteCommand.Stop -> stopSpoofing()
+            is RemoteCommand.Start -> {
+                command.speedKmh?.let { setSpeedKmh(it) }
+                command.loop?.let { setLoopRoute(it) }
+                command.accuracyMeters?.let { accuracy -> updateSettings { it.copy(accuracyMeters = accuracy) } }
+                if (command.waypoints.size > 1) {
+                    _ui.update { it.copy(mode = SpoofMode.Route, waypoints = command.waypoints) }
+                    _cameraMoves.tryEmit(CameraMove.Fit(command.waypoints))
+                } else {
+                    val point = command.waypoints.first()
+                    _ui.update { it.copy(mode = SpoofMode.Fixed, target = point) }
+                    app.settings.lastTarget = point
+                    _cameraMoves.tryEmit(CameraMove.Center(point, zoom = 16.0))
+                }
+                startSpoofing()
+            }
+        }
+    }
 
     private fun addPoint(position: LatLng) {
         when (_ui.value.mode) {

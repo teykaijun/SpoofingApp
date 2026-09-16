@@ -9,3 +9,8 @@
 /captures/
 .externalNativeBuild/
 .cxx/
+
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user

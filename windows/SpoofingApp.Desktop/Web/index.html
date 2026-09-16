@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Location Spoofer — device controller</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<aside id="sidebar">
+    <header>
+        <h1>Location Spoofer</h1>
+        <p class="subtitle">Device controller</p>
+    </header>
+
+    <section>
+        <h2>Device</h2>
+        <div class="row">
+            <select id="device"></select>
+            <button id="refresh" class="ghost" title="Rescan for devices">Rescan</button>
+        </div>
+        <div class="chips">
+            <span id="chip-app" class="chip">app: unknown</span>
+            <span id="chip-mock" class="chip">mock: unknown</span>
+        </div>
+        <div class="row">
+            <button id="prepare" class="ghost">Prepare device</button>
+            <button id="install" class="ghost">Install APK…</button>
+        </div>
+        <p id="adb-path" class="hint"></p>
+    </section>
+
+    <section>
+        <h2>Target</h2>
+        <div class="segmented">
+            <button id="mode-fixed" class="segment active">Fixed point</button>
+            <button id="mode-route" class="segment">Route</button>
+        </div>
+        <div class="row">
+            <input id="search" type="text" placeholder="Place, or 48.85837, 2.29448" autocomplete="off" />
+            <button id="search-go" class="ghost">Go</button>
+        </div>
+        <ul id="results" class="results hidden"></ul>
+        <p id="target" class="mono">Click the map to choose a location</p>
+        <div id="route-controls" class="hidden">
+            <div class="row between">
+                <span id="route-summary" class="hint">No waypoints yet</span>
+                <span>
+                    <button id="undo" class="ghost small">Undo</button>
+                    <button id="clear" class="ghost small">Clear</button>
+                </span>
+            </div>
+            <label class="slider-label" for="speed">Speed <output id="speed-value">18 km/h</output></label>
+            <input id="speed" type="range" min="1" max="150" value="18" />
+            <div class="presets">
+                <button class="chip-button" data-speed="5">Walk</button>
+                <button class="chip-button" data-speed="10">Run</button>
+                <button class="chip-button" data-speed="18">Bike</button>
+                <button class="chip-button" data-speed="50">Car</button>
+            </div>
+            <label class="checkbox"><input id="loop" type="checkbox" /> Loop the route</label>
+        </div>
+        <label class="slider-label" for="accuracy">Reported accuracy <output id="accuracy-value">5 m</output></label>
+        <input id="accuracy" type="range" min="1" max="50" value="5" />
+    </section>
+
+    <section class="actions">
+        <button id="start" class="primary">Start spoofing</button>
+        <button id="stop" class="danger hidden">Stop</button>
+        <p id="status" class="hint">Not spoofing</p>
+    </section>
+
+    <section class="log-section">
+        <h2>Log</h2>
+        <pre id="log" class="log"></pre>
+    </section>
+</aside>
+
+<main id="map"></main>
+
+<div id="preview-banner" class="hidden">Preview mode — not connected to adb</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
