@@ -1,6 +1,7 @@
 package com.spoofingmobileapp.ui
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,10 +14,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.CenterFocusStrong
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.SystemUpdate
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -25,26 +32,32 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.spoofingmobileapp.BuildConfig
 import com.spoofingmobileapp.R
 import com.spoofingmobileapp.spoof.MockLocationSetup
 import com.spoofingmobileapp.spoof.SpoofError
 import com.spoofingmobileapp.spoof.SpoofState
+import com.spoofingmobileapp.update.UpdateState
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = viewModel()) {
@@ -54,6 +67,7 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     val favorites by viewModel.favorites.collectAsStateWithLifecycle()
     val spoofState by viewModel.spoofState.collectAsStateWithLifecycle()
     val spoofError by viewModel.spoofError.collectAsStateWithLifecycle()
+    val updateState by viewModel.updateState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
     var showFavorites by rememberSaveable { mutableStateOf(false) }
@@ -120,6 +134,19 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
         }
     }
 
+    val uriHandler = LocalUriHandler.current
+    val scope = rememberCoroutineScope()
+    val openLinkError = stringResource(R.string.error_open_link)
+    val openLink: (String) -> Unit = { url ->
+        try {
+            uriHandler.openUri(url)
+        } catch (e: IllegalArgumentException) {
+            scope.launch { snackbarHostState.showSnackbar(openLinkError) }
+        } catch (e: ActivityNotFoundException) {
+            scope.launch { snackbarHostState.showSnackbar(openLinkError) }
+        }
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -175,6 +202,8 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                     onCenterSelection = viewModel::centerOnSelection,
                     onFavorites = { showFavorites = true },
                     onSettings = { showSettings = true },
+                    onCheckUpdates = viewModel::checkForUpdates,
+                    onSupport = { openLink(BUY_ME_A_COFFEE_URL) },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(12.dp),
@@ -235,6 +264,18 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
             onDismiss = { showSaveFavorite = false },
         )
     }
+
+    UpdateDialog(
+        state = updateState,
+        currentVersion = BuildConfig.VERSION_NAME,
+        onUpdate = viewModel::installUpdate,
+        onOpenReleaseNotes = openLink,
+        onOpenPermissionSettings = {
+            viewModel.dismissUpdate()
+            viewModel.openInstallPermissionSettings()
+        },
+        onDismiss = viewModel::dismissUpdate,
+    )
 }
 
 @Composable
@@ -243,15 +284,47 @@ private fun MapButtons(
     onCenterSelection: () -> Unit,
     onFavorites: () -> Unit,
     onSettings: () -> Unit,
+    onCheckUpdates: () -> Unit,
+    onSupport: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var menuOpen by remember { mutableStateOf(false) }
     Column(
         modifier,
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        SmallFloatingActionButton(onClick = onSettings) {
-            Icon(Icons.Filled.Tune, contentDescription = stringResource(R.string.cd_settings))
+        Box {
+            SmallFloatingActionButton(onClick = { menuOpen = true }) {
+                Icon(Icons.Filled.MoreVert, contentDescription = stringResource(R.string.cd_more_options))
+            }
+            DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.settings_title)) },
+                    leadingIcon = { Icon(Icons.Filled.Tune, contentDescription = null) },
+                    onClick = {
+                        menuOpen = false
+                        onSettings()
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.menu_check_updates)) },
+                    leadingIcon = { Icon(Icons.Outlined.SystemUpdate, contentDescription = null) },
+                    onClick = {
+                        menuOpen = false
+                        onCheckUpdates()
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.menu_support)) },
+                    leadingIcon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) },
+                    trailingIcon = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
+                    onClick = {
+                        menuOpen = false
+                        onSupport()
+                    },
+                )
+            }
         }
         SmallFloatingActionButton(onClick = onFavorites) {
             Icon(Icons.Filled.Star, contentDescription = stringResource(R.string.cd_favorites))
@@ -264,3 +337,5 @@ private fun MapButtons(
         }
     }
 }
+
+private const val BUY_ME_A_COFFEE_URL = "https://buymeacoffee.com/casunoxd"

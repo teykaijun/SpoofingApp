@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
+import com.spoofingmobileapp.BuildConfig
 import com.spoofingmobileapp.R
 import com.spoofingmobileapp.SpooferApplication
 import com.spoofingmobileapp.data.Favorite
@@ -24,6 +25,10 @@ import com.spoofingmobileapp.spoof.SpoofConfig
 import com.spoofingmobileapp.spoof.SpoofError
 import com.spoofingmobileapp.spoof.SpoofSession
 import com.spoofingmobileapp.spoof.SpoofState
+import com.spoofingmobileapp.update.UpdateInfo
+import com.spoofingmobileapp.update.UpdateRepository
+import com.spoofingmobileapp.update.UpdateSession
+import com.spoofingmobileapp.update.UpdateState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
@@ -93,7 +98,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val app = application as SpooferApplication
     private val placeSearch = PlaceSearch(application)
+    private val updates = UpdateRepository(application)
     private var searchJob: Job? = null
+    private var updateJob: Job? = null
 
     private val _ui = MutableStateFlow(MainUiState(target = app.settings.lastTarget))
     val ui: StateFlow<MainUiState> = _ui.asStateFlow()
@@ -102,6 +109,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val favorites: StateFlow<List<Favorite>> = app.favorites.favorites
     val spoofState: StateFlow<SpoofState> = SpoofSession.state
     val spoofError: StateFlow<SpoofError?> = SpoofSession.error
+    val updateState: StateFlow<UpdateState> = UpdateSession.state
 
     private val _cameraMoves = MutableSharedFlow<CameraMove>(extraBufferCapacity = 1)
     val cameraMoves: SharedFlow<CameraMove> = _cameraMoves.asSharedFlow()
@@ -229,6 +237,48 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun stopSpoofing() = MockLocationService.stop(getApplication<Application>())
 
     fun clearError() = SpoofSession.clearError()
+
+    fun checkForUpdates() {
+        if (updateJob?.isActive == true) return
+        UpdateSession.report(UpdateState.Checking)
+        updateJob = viewModelScope.launch {
+            try {
+                val info = updates.findUpdate()
+                UpdateSession.report(
+                    if (info == null) UpdateState.UpToDate(BuildConfig.VERSION_NAME) else UpdateState.Available(info),
+                )
+            } catch (e: IOException) {
+                UpdateSession.report(UpdateState.Failed(e.message))
+            }
+        }
+    }
+
+    /** Downloads the newer build and hands it to Android's installer. */
+    fun installUpdate(info: UpdateInfo) {
+        if (updateJob?.isActive == true) return
+        if (!updates.canInstallPackages()) {
+            UpdateSession.report(UpdateState.PermissionRequired(info))
+            return
+        }
+        updateJob = viewModelScope.launch {
+            try {
+                UpdateSession.report(UpdateState.Downloading(0f))
+                val apk = updates.download(info) { progress ->
+                    UpdateSession.report(UpdateState.Downloading(progress))
+                }
+                UpdateSession.report(UpdateState.Installing)
+                updates.install(apk)
+            } catch (e: IOException) {
+                UpdateSession.report(UpdateState.Failed(e.message))
+            } catch (e: SecurityException) {
+                UpdateSession.report(UpdateState.Failed(e.message))
+            }
+        }
+    }
+
+    fun openInstallPermissionSettings() = updates.openInstallPermissionSettings()
+
+    fun dismissUpdate() = UpdateSession.dismiss()
 
     /** Applies a command sent from the desktop controller over adb. */
     fun applyRemoteCommand(command: RemoteCommand) {

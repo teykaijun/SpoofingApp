@@ -11,8 +11,8 @@ android {
         applicationId = "com.spoofingmobileapp"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.1.0"
+        versionCode = 3
+        versionName = "1.2.0"
     }
 
     buildTypes {
@@ -28,6 +28,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -50,4 +51,6 @@ dependencies {
     implementation(libs.osmdroid.android)
 
     testImplementation(libs.junit)
+    // Real org.json so release parsing can be unit tested off-device.
+    testImplementation(libs.json)
 }

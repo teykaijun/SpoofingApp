@@ -64,7 +64,11 @@
     <string name="cd_my_location">Center on my location</string>
     <string name="cd_center_target">Center on target</string>
     <string name="cd_favorites">Favorites</string>
-    <string name="cd_settings">Settings</string>
+    <string name="cd_more_options">More options</string>
+
+    <!-- Menu -->
+    <string name="menu_support">Support development ☕</string>
+    <string name="error_open_link">Could not open the link. Is a web browser installed?</string>
 
     <!-- Favorites -->
     <string name="favorites_title">Favorites</string>
@@ -87,6 +91,25 @@
     <string name="settings_interval">Update interval: %1$s</string>
     <string name="settings_fused">Mock Google Play services location</string>
     <string name="settings_fused_summary">Most apps, including Google Maps, read location from Play services</string>
+
+    <!-- Updates -->
+    <string name="menu_check_updates">Check for updates</string>
+    <string name="update_checking">Checking for updates…</string>
+    <string name="update_up_to_date">You are on the latest version (%1$s).</string>
+    <string name="update_available_title">Update available</string>
+    <string name="update_available_body">Version %1$s is ready to install. You have %2$s.</string>
+    <string name="update_download_size">Download size: %1$s</string>
+    <string name="update_release_notes">Release notes</string>
+    <string name="update_action">Update</string>
+    <string name="update_later">Later</string>
+    <string name="update_downloading">Downloading… %1$d%%</string>
+    <string name="update_installing">Handing the file to the Android installer…</string>
+    <string name="update_installed">Update installed.</string>
+    <string name="update_failed">Update failed: %1$s</string>
+    <string name="update_failed_generic">The update could not be installed.</string>
+    <string name="update_permission_title">Permission needed once</string>
+    <string name="update_permission_body">Android needs your permission for Location Spoofer to install apps. Allow it, then tap Update again.</string>
+    <string name="update_permission_button">Open settings</string>
 
     <!-- Errors -->
     <string name="error_not_mock_app">Location Spoofer is not selected as the mock location app in Developer options.</string>

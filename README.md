@@ -11,8 +11,8 @@
 ![Windows 10 | 11](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square)
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-casunoxd-FFDD00?style=flat-square&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/casunoxd)
 
-**[Download for Android](https://github.com/teykaijun/SpoofingApp/releases/download/v1.1.0/LocationSpoofer-v1.1.0-debug.apk)** ·
-**[Download for Windows](https://github.com/teykaijun/SpoofingApp/releases/download/v1.1.0/LocationSpoofer-windows-v1.1.0.zip)** ·
+**[Download for Android](https://github.com/teykaijun/SpoofingApp/releases/download/v1.2.0/LocationSpoofer-v1.2.0-debug.apk)** ·
+**[Download for Windows](https://github.com/teykaijun/SpoofingApp/releases/download/v1.2.0/LocationSpoofer-windows-v1.2.0.zip)** ·
 [All releases](https://github.com/teykaijun/SpoofingApp/releases)
 
 <img src="docs/screenshots/windows-controller.jpg" alt="The Windows controller simulating a bike route through Paris on a connected Android phone" width="880">
@@ -45,8 +45,8 @@ It's handy for:
 
 | Platform | Download | Requirements |
 | --- | --- | --- |
-| Android | [LocationSpoofer-v1.1.0-debug.apk](https://github.com/teykaijun/SpoofingApp/releases/download/v1.1.0/LocationSpoofer-v1.1.0-debug.apk) (19 MB) | Android 8.0 or newer |
-| Windows | [LocationSpoofer-windows-v1.1.0.zip](https://github.com/teykaijun/SpoofingApp/releases/download/v1.1.0/LocationSpoofer-windows-v1.1.0.zip) (63 MB) | Windows 10/11 x64, [adb](https://developer.android.com/tools/releases/platform-tools), WebView2 Runtime (built into Windows 11) |
+| Android | [LocationSpoofer-v1.2.0-debug.apk](https://github.com/teykaijun/SpoofingApp/releases/download/v1.2.0/LocationSpoofer-v1.2.0-debug.apk) (19 MB) | Android 8.0 or newer |
+| Windows | [LocationSpoofer-windows-v1.2.0.zip](https://github.com/teykaijun/SpoofingApp/releases/download/v1.2.0/LocationSpoofer-windows-v1.2.0.zip) (63 MB) | Windows 10/11 x64, [adb](https://developer.android.com/tools/releases/platform-tools), WebView2 Runtime (built into Windows 11) |
 
 Both are free and open source. Release notes and older versions are on the
 [releases page](https://github.com/teykaijun/SpoofingApp/releases).
@@ -86,6 +86,8 @@ To get your real location back, tap **Stop** in either app or in the phone's not
 - **Live changes:** apply a new point, speed or accuracy while spoofing. Changing only speed,
   loop or accuracy keeps your position on the route.
 - **OpenStreetMap** map with no API key, favorites, and adjustable accuracy and update interval.
+- **Updates itself:** More options › **Check for updates** fetches the newest release from
+  GitHub and hands it to Android's installer, so you never have to re-download the APK by hand.
 
 ### Windows controller
 
